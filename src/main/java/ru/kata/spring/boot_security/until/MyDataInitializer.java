@@ -31,7 +31,9 @@ public class MyDataInitializer {
     public void initializeData() {
         if (adminService.getAllUsers().isEmpty()) {
             Role adminRole = new Role("ROLE_ADMIN");
+            Role userRole = new Role("ROLE_USER");
             roleService.saveRole(adminRole);
+            roleService.saveRole(userRole);
             Person adminUser = new Person();
             adminUser.setFirstName("admin");
             adminUser.setLastName("admin");
