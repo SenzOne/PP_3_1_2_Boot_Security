@@ -7,11 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kata.spring.boot_security.models.Person;
 import ru.kata.spring.boot_security.security.PersonDetails;
 import ru.kata.spring.boot_security.services.AdminService;
 import ru.kata.spring.boot_security.services.RoleService;
 import ru.kata.spring.boot_security.until.PersonValidator;
+import ru.kata.spring.boot_security.until.RoleValidator;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -27,26 +29,29 @@ public class AdminController {
     private final AdminService adminService;
     private final RoleService roleService;
     private final PersonValidator personValidator;
+    private final RoleValidator roleValidator;
 
     /**
      * Конструктор контроллера.
      *
-     * @param adminService     Сервис для работы с пользователями.
-     * @param roleService      Сервис для работы с ролями.
-     * @param personValidator  Валидатор для объектов Person.
+     * @param adminService    Сервис для работы с пользователями.
+     * @param roleService     Сервис для работы с ролями.
+     * @param personValidator Валидатор для объектов Person.
+     * @param roleValidator
      */
     @Autowired
-    public AdminController(AdminService adminService, RoleService roleService, PersonValidator personValidator) {
+    public AdminController(AdminService adminService, RoleService roleService, PersonValidator personValidator, RoleValidator roleValidator) {
         this.adminService = adminService;
         this.roleService = roleService;
         this.personValidator = personValidator;
+        this.roleValidator = roleValidator;
     }
 
     /**
      * Получает страницу со списком всех пользователей.
      *
-     * @param model      Модель для передачи данных в представление.
-     * @param principal  Объект Principal для получения информации об аутентифицированном пользователе.
+     * @param model     Модель для передачи данных в представление.
+     * @param principal Объект Principal для получения информации об аутентифицированном пользователе.
      * @return Строка с именем представления "admin/users".
      */
     @GetMapping("/users")
@@ -90,21 +95,35 @@ public class AdminController {
     /**
      * Обрабатывает форму редактирования пользователя и перенаправляет на страницу со списком пользователей.
      *
-     * @param person         Объект Person с данными пользователя.
-     * @param roles          Список ролей пользователя.
-     * @param bindingResult  Результат валидации данных пользователя.
+     * @param person        Объект Person с данными пользователя.
+     * @param roles         Список ролей пользователя.
+     * @param personBindingResult Результат валидации данных пользователя.
+     * @param rolesBindingResult Результат валидации данных роли.
      * @return Строка с адресом перенаправления "/admin/users".
      */
     @PostMapping("/updateUser")
     public String postEditUserForm(@ModelAttribute("person") @Valid Person person,
-                                   @RequestParam(value = "roles", required = false) List<String> roles,
-                                   BindingResult bindingResult) {
+                                   BindingResult personBindingResult,
+                                   @RequestParam(value = "roles", required = false) @Valid List<String> roles,
+                                   BindingResult rolesBindingResult,
+                                   RedirectAttributes redirectAttributes) {
 
-        personValidator.validate(person, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "redirect:/admin/users";
+        System.out.println();
+        personValidator.validate(person, personBindingResult);
+        if (personBindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errorsPerson", personBindingResult.getAllErrors());
+            return "/admin/userUpdate";
         }
+
+
+        roleValidator.validate(roles, rolesBindingResult);
+        if (rolesBindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errorsRoles", rolesBindingResult.getAllErrors());
+            return "/admin/userUpdate";
+        }
+
         adminService.updateUser(person, roles);
         return "redirect:/admin/users";
     }
+
 }

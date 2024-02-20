@@ -88,9 +88,9 @@
             color: #007bff;
         }
 
-        div th\\:each {
-            margin-bottom: 15px;
-        }
+        /*div th\\:each {*/
+        /*    margin-bottom: 15px;*/
+        /*}*/
 
         input[type="checkbox"] {
             margin-right: 8px;
@@ -109,6 +109,7 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+
         .header-class {
             display: flex;
             justify-content: flex-end;
@@ -157,17 +158,14 @@
         <label for="emailUpdate">Email</label>
         <input type="text" th:field="*{email}" id="emailUpdate" placeholder="email">
         <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
-        <div>
-            <fieldset>
-                <legend>Roles:</legend>
-                <div th:each="role: ${roles}">
-                    <label>
-                        <input type="checkbox" name="roles" th:value="${role.id}" th:checked="${person.roles != null && person.roles.![id].contains(role.id)}"/>
-                        <span th:text="${role}"></span>
-                    </label>
-                </div>
-            </fieldset>
-        </div>
+        <td>
+            <label for="user">USER</label><br>
+            <input type="checkbox" th:field="*{roles}" id="user" value="2">
+            <label for="admin">ADMIN</label><br>
+            <input type="checkbox" th:field="*{roles}" id="admin" value="1">
+        </td>
+        <div style="color: red" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Roles Error</div>
+
         <br>
 
         <input type="submit" value="Update User">

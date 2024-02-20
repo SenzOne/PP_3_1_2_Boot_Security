@@ -4,7 +4,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.kata.spring.boot_security.models.Person;
+import ru.kata.spring.boot_security.models.Role;
 import ru.kata.spring.boot_security.services.PeopleService;
+
+import java.util.List;
 
 /**
  * Валидатор для объекта Person.
