@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .buttons {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button.logout {
+            background-color: #ff5555; /* красный цвет для кнопки выхода */
+            color: white;
+        }
+
+        button.home {
+            background-color: #4285f4; /* синий цвет для кнопки домашней страницы */
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<div th:fragment="header">
+    <header>
+        <div class="buttons">
+            <button class="home" onclick="window.location.href = '/'">Home</button>
+        </div>
+        <form th:action="@{/logout}" th:method="POST" style="display: inline-block;">
+            <button class="logout" type="submit">Logout</button>
+        </form>
+    </header>
+</div>
+<div th:fragment="header_full">
+    <header>
+        <div class="buttons">
+            <button class="home" onclick="window.location.href = '/'">Home</button>
+        </div>
+        <div class="buttons">
+            <button class="buttons" onclick="window.location.href = '/auth/registration'">Sign Up</button>
+        </div>
+        <div class="buttons">
+            <button class="buttons" onclick="window.location.href = '/auth/login'">Sign In</button>
+        </div>
+        <form th:action="@{/logout}" th:method="POST" style="display: inline-block;">
+            <button class="logout" type="submit">Logout</button>
+        </form>
+    </header>
+</div>
+</body>
+</html>
