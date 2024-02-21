@@ -13,13 +13,4 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByNameOfRole(String nameOfRole);
 
     Optional<Role> findById(Long id);
-
-    default Optional<Role> findByStringId(String stringId) {
-        try {
-            Long id = Long.parseLong(stringId);
-            return findById(id);
-        } catch (NumberFormatException e) {
-            return Optional.empty();
-        }
-    }
 }

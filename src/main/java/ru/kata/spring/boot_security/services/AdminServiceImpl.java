@@ -70,7 +70,8 @@ public class AdminServiceImpl implements AdminService {
         Person beforeUpdate = peopleRepository.getById(person.getId());
         person.setPassword(beforeUpdate.getPassword());
         Set<Role> roleSet = roles.stream()
-                .map(roleRepository::findByStringId)
+                .map(Long::valueOf)
+                .map(roleRepository::findById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
